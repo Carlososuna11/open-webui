@@ -107,9 +107,9 @@ for source in log_sources:
 log.setLevel(SRC_LOG_LEVELS["CONFIG"])
 
 
-WEBUI_NAME = os.environ.get("WEBUI_NAME", "Open WebUI")
-if WEBUI_NAME != "Open WebUI":
-    WEBUI_NAME += " (Open WebUI)"
+WEBUI_NAME = os.environ.get("WEBUI_NAME", "Auna Ideas")
+if WEBUI_NAME != "Auna Ideas":
+    WEBUI_NAME += " (Auna Ideas)"
 
 WEBUI_FAVICON_URL = "https://openwebui.com/favicon.png"
 
@@ -160,7 +160,8 @@ try:
         changelog_content = file.read()
 
 except Exception:
-    changelog_content = (pkgutil.get_data("open_webui", "CHANGELOG.md") or b"").decode()
+    changelog_content = (pkgutil.get_data(
+        "open_webui", "CHANGELOG.md") or b"").decode()
 
 
 # Convert markdown content to HTML
@@ -174,7 +175,8 @@ changelog_json = {}
 
 # Iterate over each version
 for version in soup.find_all("h2"):
-    version_number = version.get_text().strip().split(" - ")[0][1:-1]  # Remove brackets
+    version_number = version.get_text().strip().split(
+        " - ")[0][1:-1]  # Remove brackets
     date = version.get_text().strip().split(" - ")[1]
 
     version_data = {"date": date}
@@ -207,7 +209,8 @@ SAFE_MODE = os.environ.get("SAFE_MODE", "false").lower() == "true"
 ####################################
 
 ENABLE_FORWARD_USER_INFO_HEADERS = (
-    os.environ.get("ENABLE_FORWARD_USER_INFO_HEADERS", "False").lower() == "true"
+    os.environ.get("ENABLE_FORWARD_USER_INFO_HEADERS",
+                   "False").lower() == "true"
 )
 
 
@@ -224,7 +227,8 @@ WEBUI_BUILD_HASH = os.environ.get("WEBUI_BUILD_HASH", "dev-build")
 DATA_DIR = Path(os.getenv("DATA_DIR", BACKEND_DIR / "data")).resolve()
 
 if FROM_INIT_PY:
-    NEW_DATA_DIR = Path(os.getenv("DATA_DIR", OPEN_WEBUI_DIR / "data")).resolve()
+    NEW_DATA_DIR = Path(
+        os.getenv("DATA_DIR", OPEN_WEBUI_DIR / "data")).resolve()
     NEW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     # Check if the data directory exists in the package directory
@@ -238,7 +242,8 @@ if FROM_INIT_PY:
                 shutil.copy2(item, dest)
 
         # Zip the data directory
-        shutil.make_archive(DATA_DIR.parent / "open_webui_data", "zip", DATA_DIR)
+        shutil.make_archive(
+            DATA_DIR.parent / "open_webui_data", "zip", DATA_DIR)
 
         # Remove the old data directory
         shutil.rmtree(DATA_DIR)
@@ -250,7 +255,8 @@ STATIC_DIR = Path(os.getenv("STATIC_DIR", OPEN_WEBUI_DIR / "static"))
 
 FONTS_DIR = Path(os.getenv("FONTS_DIR", OPEN_WEBUI_DIR / "static" / "fonts"))
 
-FRONTEND_BUILD_DIR = Path(os.getenv("FRONTEND_BUILD_DIR", BASE_DIR / "build")).resolve()
+FRONTEND_BUILD_DIR = Path(
+    os.getenv("FRONTEND_BUILD_DIR", BASE_DIR / "build")).resolve()
 
 if FROM_INIT_PY:
     FRONTEND_BUILD_DIR = Path(
@@ -341,7 +347,8 @@ WEBUI_AUTH = os.environ.get("WEBUI_AUTH", "True").lower() == "true"
 WEBUI_AUTH_TRUSTED_EMAIL_HEADER = os.environ.get(
     "WEBUI_AUTH_TRUSTED_EMAIL_HEADER", None
 )
-WEBUI_AUTH_TRUSTED_NAME_HEADER = os.environ.get("WEBUI_AUTH_TRUSTED_NAME_HEADER", None)
+WEBUI_AUTH_TRUSTED_NAME_HEADER = os.environ.get(
+    "WEBUI_AUTH_TRUSTED_NAME_HEADER", None)
 
 BYPASS_MODEL_ACCESS_CONTROL = (
     os.environ.get("BYPASS_MODEL_ACCESS_CONTROL", "False").lower() == "true"
@@ -358,7 +365,8 @@ WEBUI_SECRET_KEY = os.environ.get(
     ),  # DEPRECATED: remove at next major version
 )
 
-WEBUI_SESSION_COOKIE_SAME_SITE = os.environ.get("WEBUI_SESSION_COOKIE_SAME_SITE", "lax")
+WEBUI_SESSION_COOKIE_SAME_SITE = os.environ.get(
+    "WEBUI_SESSION_COOKIE_SAME_SITE", "lax")
 
 WEBUI_SESSION_COOKIE_SECURE = (
     os.environ.get("WEBUI_SESSION_COOKIE_SECURE", "false").lower() == "true"
@@ -427,7 +435,8 @@ ENABLE_AUDIT_LOGS = os.getenv("ENABLE_AUDIT_LOGS", "false").lower() == "true"
 # Where to store log file
 AUDIT_LOGS_FILE_PATH = f"{DATA_DIR}/audit.log"
 # Maximum size of a file before rotating into a new log file
-AUDIT_LOG_FILE_ROTATION_SIZE = os.getenv("AUDIT_LOG_FILE_ROTATION_SIZE", "10MB")
+AUDIT_LOG_FILE_ROTATION_SIZE = os.getenv(
+    "AUDIT_LOG_FILE_ROTATION_SIZE", "10MB")
 # METADATA | REQUEST | REQUEST_RESPONSE
 AUDIT_LOG_LEVEL = os.getenv("AUDIT_LOG_LEVEL", "REQUEST_RESPONSE").upper()
 try:

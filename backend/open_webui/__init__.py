@@ -17,7 +17,7 @@ def version_callback(value: bool):
     if value:
         from open_webui.env import VERSION
 
-        typer.echo(f"Open WebUI version: {VERSION}")
+        typer.echo(f"Auna Ideas version: {VERSION}")
         raise typer.Exit()
 
 
@@ -41,7 +41,8 @@ def serve(
             "Loading WEBUI_SECRET_KEY from file, not provided as an environment variable."
         )
         if not KEY_FILE.exists():
-            typer.echo(f"Generating a new secret key and saving it to {KEY_FILE}")
+            typer.echo(
+                f"Generating a new secret key and saving it to {KEY_FILE}")
             KEY_FILE.write_bytes(base64.b64encode(random.randbytes(12)))
         typer.echo(f"Loading WEBUI_SECRET_KEY from {KEY_FILE}")
         os.environ["WEBUI_SECRET_KEY"] = KEY_FILE.read_text()
@@ -74,7 +75,8 @@ def serve(
 
     import open_webui.main  # we need set environment variables before importing main
 
-    uvicorn.run(open_webui.main.app, host=host, port=port, forwarded_allow_ips="*")
+    uvicorn.run(open_webui.main.app, host=host,
+                port=port, forwarded_allow_ips="*")
 
 
 @app.command()

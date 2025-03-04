@@ -276,7 +276,8 @@ ENABLE_API_KEY = PersistentConfig(
 ENABLE_API_KEY_ENDPOINT_RESTRICTIONS = PersistentConfig(
     "ENABLE_API_KEY_ENDPOINT_RESTRICTIONS",
     "auth.api_key.endpoint_restrictions",
-    os.environ.get("ENABLE_API_KEY_ENDPOINT_RESTRICTIONS", "False").lower() == "true",
+    os.environ.get("ENABLE_API_KEY_ENDPOINT_RESTRICTIONS",
+                   "False").lower() == "true",
 )
 
 API_KEY_ALLOWED_ENDPOINTS = PersistentConfig(
@@ -477,7 +478,8 @@ OAUTH_ALLOWED_ROLES = PersistentConfig(
 OAUTH_ADMIN_ROLES = PersistentConfig(
     "OAUTH_ADMIN_ROLES",
     "oauth.admin_roles",
-    [role.strip() for role in os.environ.get("OAUTH_ADMIN_ROLES", "admin").split(",")],
+    [role.strip() for role in os.environ.get(
+        "OAUTH_ADMIN_ROLES", "admin").split(",")],
 )
 
 OAUTH_ALLOWED_DOMAINS = PersistentConfig(
@@ -620,7 +622,8 @@ CUSTOM_NAME = os.environ.get("CUSTOM_NAME", "")
 
 if CUSTOM_NAME:
     try:
-        r = requests.get(f"https://api.openwebui.com/api/v1/custom/{CUSTOM_NAME}")
+        r = requests.get(
+            f"https://api.openwebui.com/api/v1/custom/{CUSTOM_NAME}")
         data = r.json()
         if r.ok:
             if "logo" in data:
@@ -669,7 +672,8 @@ LICENSE_KEY = PersistentConfig(
 # STORAGE PROVIDER
 ####################################
 
-STORAGE_PROVIDER = os.environ.get("STORAGE_PROVIDER", "local")  # defaults to local, s3
+STORAGE_PROVIDER = os.environ.get(
+    "STORAGE_PROVIDER", "local")  # defaults to local, s3
 
 S3_ACCESS_KEY_ID = os.environ.get("S3_ACCESS_KEY_ID", None)
 S3_SECRET_ACCESS_KEY = os.environ.get("S3_SECRET_ACCESS_KEY", None)
@@ -688,7 +692,8 @@ GOOGLE_APPLICATION_CREDENTIALS_JSON = os.environ.get(
 )
 
 AZURE_STORAGE_ENDPOINT = os.environ.get("AZURE_STORAGE_ENDPOINT", None)
-AZURE_STORAGE_CONTAINER_NAME = os.environ.get("AZURE_STORAGE_CONTAINER_NAME", None)
+AZURE_STORAGE_CONTAINER_NAME = os.environ.get(
+    "AZURE_STORAGE_CONTAINER_NAME", None)
 AZURE_STORAGE_KEY = os.environ.get("AZURE_STORAGE_KEY", None)
 
 ####################################
@@ -735,7 +740,8 @@ OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "")
 if OLLAMA_BASE_URL:
     # Remove trailing slash
     OLLAMA_BASE_URL = (
-        OLLAMA_BASE_URL[:-1] if OLLAMA_BASE_URL.endswith("/") else OLLAMA_BASE_URL
+        OLLAMA_BASE_URL[:-
+                        1] if OLLAMA_BASE_URL.endswith("/") else OLLAMA_BASE_URL
     )
 
 
@@ -752,7 +758,7 @@ if OLLAMA_BASE_URL == "" and OLLAMA_API_BASE_URL != "":
 if ENV == "prod":
     if OLLAMA_BASE_URL == "/ollama" and not K8S_FLAG:
         if USE_OLLAMA_DOCKER.lower() == "true":
-            # if you use all-in-one docker container (Open WebUI + Ollama)
+            # if you use all-in-one docker container (Auna Ideas + Ollama)
             # with the docker build arg USE_OLLAMA=true (--build-arg="USE_OLLAMA=true") this only works with http://localhost:11434
             OLLAMA_BASE_URL = "http://localhost:11434"
         else:
@@ -840,7 +846,8 @@ OPENAI_API_BASE_URL = "https://api.openai.com/v1"
 
 
 WEBUI_URL = PersistentConfig(
-    "WEBUI_URL", "webui.url", os.environ.get("WEBUI_URL", "http://localhost:3000")
+    "WEBUI_URL", "webui.url", os.environ.get(
+        "WEBUI_URL", "http://localhost:3000")
 )
 
 
@@ -864,11 +871,12 @@ ENABLE_LOGIN_FORM = PersistentConfig(
 DEFAULT_LOCALE = PersistentConfig(
     "DEFAULT_LOCALE",
     "ui.default_locale",
-    os.environ.get("DEFAULT_LOCALE", ""),
+    os.environ.get("DEFAULT_LOCALE", "es"),
 )
 
 DEFAULT_MODELS = PersistentConfig(
-    "DEFAULT_MODELS", "ui.default_models", os.environ.get("DEFAULT_MODELS", None)
+    "DEFAULT_MODELS", "ui.default_models", os.environ.get(
+        "DEFAULT_MODELS", None)
 )
 
 DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
@@ -923,17 +931,20 @@ USER_PERMISSIONS_WORKSPACE_MODELS_ACCESS = (
 )
 
 USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS = (
-    os.environ.get("USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS", "False").lower()
+    os.environ.get(
+        "USER_PERMISSIONS_WORKSPACE_KNOWLEDGE_ACCESS", "False").lower()
     == "true"
 )
 
 USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS = (
-    os.environ.get("USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS", "False").lower()
+    os.environ.get("USER_PERMISSIONS_WORKSPACE_PROMPTS_ACCESS",
+                   "False").lower()
     == "true"
 )
 
 USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS = (
-    os.environ.get("USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS", "False").lower() == "true"
+    os.environ.get("USER_PERMISSIONS_WORKSPACE_TOOLS_ACCESS",
+                   "False").lower() == "true"
 )
 
 USER_PERMISSIONS_CHAT_CONTROLS = (
@@ -941,7 +952,8 @@ USER_PERMISSIONS_CHAT_CONTROLS = (
 )
 
 USER_PERMISSIONS_CHAT_FILE_UPLOAD = (
-    os.environ.get("USER_PERMISSIONS_CHAT_FILE_UPLOAD", "True").lower() == "true"
+    os.environ.get("USER_PERMISSIONS_CHAT_FILE_UPLOAD",
+                   "True").lower() == "true"
 )
 
 USER_PERMISSIONS_CHAT_DELETE = (
@@ -957,16 +969,19 @@ USER_PERMISSIONS_CHAT_TEMPORARY = (
 )
 
 USER_PERMISSIONS_FEATURES_WEB_SEARCH = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_WEB_SEARCH", "True").lower() == "true"
+    os.environ.get("USER_PERMISSIONS_FEATURES_WEB_SEARCH",
+                   "True").lower() == "true"
 )
 
 USER_PERMISSIONS_FEATURES_IMAGE_GENERATION = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_IMAGE_GENERATION", "True").lower()
+    os.environ.get(
+        "USER_PERMISSIONS_FEATURES_IMAGE_GENERATION", "True").lower()
     == "true"
 )
 
 USER_PERMISSIONS_FEATURES_CODE_INTERPRETER = (
-    os.environ.get("USER_PERMISSIONS_FEATURES_CODE_INTERPRETER", "True").lower()
+    os.environ.get(
+        "USER_PERMISSIONS_FEATURES_CODE_INTERPRETER", "True").lower()
     == "true"
 )
 
@@ -1030,7 +1045,8 @@ WEBHOOK_URL = PersistentConfig(
     "WEBHOOK_URL", "webhook_url", os.environ.get("WEBHOOK_URL", "")
 )
 
-ENABLE_ADMIN_EXPORT = os.environ.get("ENABLE_ADMIN_EXPORT", "True").lower() == "true"
+ENABLE_ADMIN_EXPORT = os.environ.get(
+    "ENABLE_ADMIN_EXPORT", "True").lower() == "true"
 
 ENABLE_ADMIN_CHAT_ACCESS = (
     os.environ.get("ENABLE_ADMIN_CHAT_ACCESS", "True").lower() == "true"
@@ -1066,7 +1082,8 @@ def validate_cors_origin(origin):
 
     # Ensure that the netloc (domain + port) is present, indicating it's a valid URL
     if not parsed_url.netloc:
-        raise ValueError(f"Invalid URL structure in CORS_ALLOW_ORIGIN: '{origin}'.")
+        raise ValueError(
+            f"Invalid URL structure in CORS_ALLOW_ORIGIN: '{origin}'.")
 
 
 # For production, you should only need one host as
@@ -1232,7 +1249,8 @@ ENABLE_SEARCH_QUERY_GENERATION = PersistentConfig(
 ENABLE_RETRIEVAL_QUERY_GENERATION = PersistentConfig(
     "ENABLE_RETRIEVAL_QUERY_GENERATION",
     "task.query.retrieval.enable",
-    os.environ.get("ENABLE_RETRIEVAL_QUERY_GENERATION", "True").lower() == "true",
+    os.environ.get("ENABLE_RETRIEVAL_QUERY_GENERATION",
+                   "True").lower() == "true",
 )
 
 
@@ -1433,7 +1451,8 @@ CODE_INTERPRETER_JUPYTER_URL = PersistentConfig(
     "CODE_INTERPRETER_JUPYTER_URL",
     "code_interpreter.jupyter.url",
     os.environ.get(
-        "CODE_INTERPRETER_JUPYTER_URL", os.environ.get("CODE_EXECUTION_JUPYTER_URL", "")
+        "CODE_INTERPRETER_JUPYTER_URL", os.environ.get(
+            "CODE_EXECUTION_JUPYTER_URL", "")
     ),
 )
 
@@ -1506,10 +1525,12 @@ if VECTOR_DB == "chroma":
     import chromadb
 
     CHROMA_TENANT = os.environ.get("CHROMA_TENANT", chromadb.DEFAULT_TENANT)
-    CHROMA_DATABASE = os.environ.get("CHROMA_DATABASE", chromadb.DEFAULT_DATABASE)
+    CHROMA_DATABASE = os.environ.get(
+        "CHROMA_DATABASE", chromadb.DEFAULT_DATABASE)
     CHROMA_HTTP_HOST = os.environ.get("CHROMA_HTTP_HOST", "")
     CHROMA_HTTP_PORT = int(os.environ.get("CHROMA_HTTP_PORT", "8000"))
-    CHROMA_CLIENT_AUTH_PROVIDER = os.environ.get("CHROMA_CLIENT_AUTH_PROVIDER", "")
+    CHROMA_CLIENT_AUTH_PROVIDER = os.environ.get(
+        "CHROMA_CLIENT_AUTH_PROVIDER", "")
     CHROMA_CLIENT_AUTH_CREDENTIALS = os.environ.get(
         "CHROMA_CLIENT_AUTH_CREDENTIALS", ""
     )
@@ -1521,7 +1542,8 @@ if VECTOR_DB == "chroma":
         )
     else:
         CHROMA_HTTP_HEADERS = None
-    CHROMA_HTTP_SSL = os.environ.get("CHROMA_HTTP_SSL", "false").lower() == "true"
+    CHROMA_HTTP_SSL = os.environ.get(
+        "CHROMA_HTTP_SSL", "false").lower() == "true"
 # this uses the model defined in the Dockerfile ENV variable. If you dont use docker or docker based deployments such as k8s, the default embedding model will be used (sentence-transformers/all-MiniLM-L6-v2)
 
 # Milvus
@@ -1597,7 +1619,8 @@ CONTENT_EXTRACTION_ENGINE = PersistentConfig(
 TIKA_SERVER_URL = PersistentConfig(
     "TIKA_SERVER_URL",
     "rag.tika_server_url",
-    os.getenv("TIKA_SERVER_URL", "http://tika:9998"),  # Default for sidecar deployment
+    # Default for sidecar deployment
+    os.getenv("TIKA_SERVER_URL", "http://tika:9998"),
 )
 
 DOCUMENT_INTELLIGENCE_ENDPOINT = PersistentConfig(
@@ -1616,7 +1639,8 @@ DOCUMENT_INTELLIGENCE_KEY = PersistentConfig(
 BYPASS_EMBEDDING_AND_RETRIEVAL = PersistentConfig(
     "BYPASS_EMBEDDING_AND_RETRIEVAL",
     "rag.bypass_embedding_and_retrieval",
-    os.environ.get("BYPASS_EMBEDDING_AND_RETRIEVAL", "False").lower() == "true",
+    os.environ.get("BYPASS_EMBEDDING_AND_RETRIEVAL",
+                   "False").lower() == "true",
 )
 
 
@@ -1664,7 +1688,8 @@ RAG_FILE_MAX_SIZE = PersistentConfig(
 ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION = PersistentConfig(
     "ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION",
     "rag.enable_web_loader_ssl_verification",
-    os.environ.get("ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION", "True").lower() == "true",
+    os.environ.get("ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION",
+                   "True").lower() == "true",
 )
 
 RAG_EMBEDDING_ENGINE = PersistentConfig(
@@ -1682,7 +1707,8 @@ PDF_EXTRACT_IMAGES = PersistentConfig(
 RAG_EMBEDDING_MODEL = PersistentConfig(
     "RAG_EMBEDDING_MODEL",
     "rag.embedding_model",
-    os.environ.get("RAG_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"),
+    os.environ.get("RAG_EMBEDDING_MODEL",
+                   "sentence-transformers/all-MiniLM-L6-v2"),
 )
 log.info(f"Embedding model set: {RAG_EMBEDDING_MODEL.value}")
 
@@ -1692,7 +1718,8 @@ RAG_EMBEDDING_MODEL_AUTO_UPDATE = (
 )
 
 RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE = (
-    os.environ.get("RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE", "True").lower() == "true"
+    os.environ.get("RAG_EMBEDDING_MODEL_TRUST_REMOTE_CODE",
+                   "True").lower() == "true"
 )
 
 RAG_EMBEDDING_BATCH_SIZE = PersistentConfig(
@@ -1718,7 +1745,8 @@ RAG_RERANKING_MODEL_AUTO_UPDATE = (
 )
 
 RAG_RERANKING_MODEL_TRUST_REMOTE_CODE = (
-    os.environ.get("RAG_RERANKING_MODEL_TRUST_REMOTE_CODE", "True").lower() == "true"
+    os.environ.get("RAG_RERANKING_MODEL_TRUST_REMOTE_CODE",
+                   "True").lower() == "true"
 )
 
 
@@ -1729,7 +1757,8 @@ RAG_TEXT_SPLITTER = PersistentConfig(
 )
 
 
-TIKTOKEN_CACHE_DIR = os.environ.get("TIKTOKEN_CACHE_DIR", f"{CACHE_DIR}/tiktoken")
+TIKTOKEN_CACHE_DIR = os.environ.get(
+    "TIKTOKEN_CACHE_DIR", f"{CACHE_DIR}/tiktoken")
 TIKTOKEN_ENCODING_NAME = PersistentConfig(
     "TIKTOKEN_ENCODING_NAME",
     "rag.tiktoken_encoding_name",
@@ -1839,7 +1868,8 @@ RAG_WEB_SEARCH_ENGINE = PersistentConfig(
 BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL = PersistentConfig(
     "BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL",
     "rag.web.search.bypass_embedding_and_retrieval",
-    os.getenv("BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL", "False").lower() == "true",
+    os.getenv("BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL",
+              "False").lower() == "true",
 )
 
 # You can provide a list of your own websites to filter after performing a web search.
@@ -2265,7 +2295,8 @@ WHISPER_MODEL = PersistentConfig(
     os.getenv("WHISPER_MODEL", "base"),
 )
 
-WHISPER_MODEL_DIR = os.getenv("WHISPER_MODEL_DIR", f"{CACHE_DIR}/whisper/models")
+WHISPER_MODEL_DIR = os.getenv(
+    "WHISPER_MODEL_DIR", f"{CACHE_DIR}/whisper/models")
 WHISPER_MODEL_AUTO_UPDATE = (
     not OFFLINE_MODE
     and os.environ.get("WHISPER_MODEL_AUTO_UPDATE", "").lower() == "true"
@@ -2410,13 +2441,15 @@ LDAP_APP_PASSWORD = PersistentConfig(
 )
 
 LDAP_SEARCH_BASE = PersistentConfig(
-    "LDAP_SEARCH_BASE", "ldap.server.users_dn", os.environ.get("LDAP_SEARCH_BASE", "")
+    "LDAP_SEARCH_BASE", "ldap.server.users_dn", os.environ.get(
+        "LDAP_SEARCH_BASE", "")
 )
 
 LDAP_SEARCH_FILTERS = PersistentConfig(
     "LDAP_SEARCH_FILTER",
     "ldap.server.search_filter",
-    os.environ.get("LDAP_SEARCH_FILTER", os.environ.get("LDAP_SEARCH_FILTERS", "")),
+    os.environ.get("LDAP_SEARCH_FILTER", os.environ.get(
+        "LDAP_SEARCH_FILTERS", "")),
 )
 
 LDAP_USE_TLS = PersistentConfig(
@@ -2432,5 +2465,6 @@ LDAP_CA_CERT_FILE = PersistentConfig(
 )
 
 LDAP_CIPHERS = PersistentConfig(
-    "LDAP_CIPHERS", "ldap.server.ciphers", os.environ.get("LDAP_CIPHERS", "ALL")
+    "LDAP_CIPHERS", "ldap.server.ciphers", os.environ.get(
+        "LDAP_CIPHERS", "ALL")
 )
