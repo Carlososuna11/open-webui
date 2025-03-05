@@ -440,7 +440,7 @@
 		// Call visibility change handler initially to set state on load
 		handleVisibilityChange();
 
-		theme.set(localStorage.theme);
+		theme.set("light");
 
 		mobile.set(window.innerWidth < BREAKPOINT);
 		const onResize = () => {
