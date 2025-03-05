@@ -156,6 +156,7 @@
 					<img
 						crossorigin="anonymous"
 						src="{WEBUI_BASE_URL}/static/splash.png"
+                        class="w-64"
 						alt="logo"
 					/>
 				</div>
