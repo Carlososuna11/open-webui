@@ -72,7 +72,8 @@ log.setLevel(SRC_LOG_LEVELS["OLLAMA"])
 
 
 async def send_get_request(url, key=None, user: UserModel = None):
-    timeout = aiohttp.ClientTimeout(total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
+    timeout = aiohttp.ClientTimeout(
+        total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
     try:
         async with aiohttp.ClientSession(timeout=timeout, trust_env=True) as session:
             async with session.get(
@@ -176,7 +177,7 @@ async def send_post_request(
 
         raise HTTPException(
             status_code=r.status if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
 
 
@@ -216,7 +217,8 @@ async def verify_connection(
     key = form_data.key
 
     async with aiohttp.ClientSession(
-        timeout=aiohttp.ClientTimeout(total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
+        timeout=aiohttp.ClientTimeout(
+            total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
     ) as session:
         try:
             async with session.get(
@@ -248,7 +250,7 @@ async def verify_connection(
         except aiohttp.ClientError as e:
             log.exception(f"Client error: {str(e)}")
             raise HTTPException(
-                status_code=500, detail="Auna Ideas: Server Connection Error"
+                status_code=500, detail="Auna: Server Connection Error"
             )
         except Exception as e:
             log.exception(f"Unexpected error: {e}")
@@ -304,7 +306,8 @@ async def get_all_models(request: Request, user: UserModel = None):
             if (str(idx) not in request.app.state.config.OLLAMA_API_CONFIGS) and (
                 url not in request.app.state.config.OLLAMA_API_CONFIGS  # Legacy support
             ):
-                request_tasks.append(send_get_request(f"{url}/api/tags", user=user))
+                request_tasks.append(send_get_request(
+                    f"{url}/api/tags", user=user))
             else:
                 api_config = request.app.state.config.OLLAMA_API_CONFIGS.get(
                     str(idx),
@@ -321,7 +324,8 @@ async def get_all_models(request: Request, user: UserModel = None):
                         send_get_request(f"{url}/api/tags", key, user=user)
                     )
                 else:
-                    request_tasks.append(asyncio.ensure_future(asyncio.sleep(0, None)))
+                    request_tasks.append(
+                        asyncio.ensure_future(asyncio.sleep(0, None)))
 
         responses = await asyncio.gather(*request_tasks)
 
@@ -368,7 +372,8 @@ async def get_all_models(request: Request, user: UserModel = None):
         models = {
             "models": merge_models_lists(
                 map(
-                    lambda response: response.get("models", []) if response else None,
+                    lambda response: response.get(
+                        "models", []) if response else None,
                     responses,
                 )
             )
@@ -407,7 +412,8 @@ async def get_ollama_tags(
         models = await get_all_models(request, user=user)
     else:
         url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
-        key = get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
+        key = get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
 
         r = None
         try:
@@ -445,7 +451,7 @@ async def get_ollama_tags(
 
             raise HTTPException(
                 status_code=r.status_code if r else 500,
-                detail=detail if detail else "Auna Ideas: Server Connection Error",
+                detail=detail if detail else "Auna: Server Connection Error",
             )
 
     if user.role == "user" and not BYPASS_MODEL_ACCESS_CONTROL:
@@ -479,7 +485,8 @@ async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
                 lowest_version = min(
                     responses,
                     key=lambda x: tuple(
-                        map(int, re.sub(r"^v|-.*", "", x["version"]).split("."))
+                        map(int, re.sub(r"^v|-.*", "",
+                            x["version"]).split("."))
                     ),
                 )
 
@@ -512,7 +519,7 @@ async def get_ollama_versions(request: Request, url_idx: Optional[int] = None):
 
                 raise HTTPException(
                     status_code=r.status_code if r else 500,
-                    detail=detail if detail else "Auna Ideas: Server Connection Error",
+                    detail=detail if detail else "Auna: Server Connection Error",
                 )
     else:
         return {"version": False}
@@ -565,7 +572,8 @@ async def pull_model(
     return await send_post_request(
         url=f"{url}/api/pull",
         payload=json.dumps(payload),
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         user=user,
     )
 
@@ -602,7 +610,8 @@ async def push_model(
     return await send_post_request(
         url=f"{url}/api/push",
         payload=form_data.model_dump_json(exclude_none=True).encode(),
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         user=user,
     )
 
@@ -629,7 +638,8 @@ async def create_model(
     return await send_post_request(
         url=f"{url}/api/create",
         payload=form_data.model_dump_json(exclude_none=True).encode(),
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         user=user,
     )
 
@@ -660,7 +670,8 @@ async def copy_model(
             )
 
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
-    key = get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
+    key = get_api_key(
+        url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
 
     try:
         r = requests.request(
@@ -700,7 +711,7 @@ async def copy_model(
 
         raise HTTPException(
             status_code=r.status_code if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
 
 
@@ -725,7 +736,8 @@ async def delete_model(
             )
 
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
-    key = get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
+    key = get_api_key(
+        url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
 
     try:
         r = requests.request(
@@ -765,7 +777,7 @@ async def delete_model(
 
         raise HTTPException(
             status_code=r.status_code if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
 
 
@@ -785,7 +797,8 @@ async def show_model_info(
     url_idx = random.choice(models[form_data.name]["urls"])
 
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
-    key = get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
+    key = get_api_key(
+        url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
 
     try:
         r = requests.request(
@@ -824,7 +837,7 @@ async def show_model_info(
 
         raise HTTPException(
             status_code=r.status_code if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
 
 
@@ -864,7 +877,8 @@ async def embed(
             )
 
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
-    key = get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
+    key = get_api_key(
+        url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
 
     try:
         r = requests.request(
@@ -904,7 +918,7 @@ async def embed(
 
         raise HTTPException(
             status_code=r.status_code if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
 
 
@@ -943,7 +957,8 @@ async def embeddings(
             )
 
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
-    key = get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
+    key = get_api_key(
+        url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS)
 
     try:
         r = requests.request(
@@ -983,7 +998,7 @@ async def embeddings(
 
         raise HTTPException(
             status_code=r.status_code if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
 
 
@@ -1030,7 +1045,8 @@ async def generate_completion(
     url = request.app.state.config.OLLAMA_BASE_URLS[url_idx]
     api_config = request.app.state.config.OLLAMA_API_CONFIGS.get(
         str(url_idx),
-        request.app.state.config.OLLAMA_API_CONFIGS.get(url, {}),  # Legacy support
+        request.app.state.config.OLLAMA_API_CONFIGS.get(
+            url, {}),  # Legacy support
     )
 
     prefix_id = api_config.get("prefix_id", None)
@@ -1040,7 +1056,8 @@ async def generate_completion(
     return await send_post_request(
         url=f"{url}/api/generate",
         payload=form_data.model_dump_json(exclude_none=True).encode(),
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         user=user,
     )
 
@@ -1131,7 +1148,8 @@ async def generate_chat_completion(
             payload["options"] = apply_model_params_to_body_ollama(
                 params, payload["options"]
             )
-            payload = apply_model_system_prompt_to_body(params, payload, metadata, user)
+            payload = apply_model_system_prompt_to_body(
+                params, payload, metadata, user)
 
         # Check if user has access to the model
         if not bypass_filter and user.role == "user":
@@ -1158,7 +1176,8 @@ async def generate_chat_completion(
     url, url_idx = await get_ollama_url(request, payload["model"], url_idx)
     api_config = request.app.state.config.OLLAMA_API_CONFIGS.get(
         str(url_idx),
-        request.app.state.config.OLLAMA_API_CONFIGS.get(url, {}),  # Legacy support
+        request.app.state.config.OLLAMA_API_CONFIGS.get(
+            url, {}),  # Legacy support
     )
 
     prefix_id = api_config.get("prefix_id", None)
@@ -1169,7 +1188,8 @@ async def generate_chat_completion(
         url=f"{url}/api/chat",
         payload=json.dumps(payload),
         stream=form_data.stream,
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         content_type="application/x-ndjson",
         user=user,
     )
@@ -1261,7 +1281,8 @@ async def generate_openai_completion(
     url, url_idx = await get_ollama_url(request, payload["model"], url_idx)
     api_config = request.app.state.config.OLLAMA_API_CONFIGS.get(
         str(url_idx),
-        request.app.state.config.OLLAMA_API_CONFIGS.get(url, {}),  # Legacy support
+        request.app.state.config.OLLAMA_API_CONFIGS.get(
+            url, {}),  # Legacy support
     )
 
     prefix_id = api_config.get("prefix_id", None)
@@ -1273,7 +1294,8 @@ async def generate_openai_completion(
         url=f"{url}/v1/completions",
         payload=json.dumps(payload),
         stream=payload.get("stream", False),
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         user=user,
     )
 
@@ -1297,7 +1319,8 @@ async def generate_openai_chat_completion(
             detail=str(e),
         )
 
-    payload = {**completion_form.model_dump(exclude_none=True, exclude=["metadata"])}
+    payload = {
+        **completion_form.model_dump(exclude_none=True, exclude=["metadata"])}
     if "metadata" in payload:
         del payload["metadata"]
 
@@ -1314,7 +1337,8 @@ async def generate_openai_chat_completion(
 
         if params:
             payload = apply_model_params_to_body_openai(params, payload)
-            payload = apply_model_system_prompt_to_body(params, payload, metadata, user)
+            payload = apply_model_system_prompt_to_body(
+                params, payload, metadata, user)
 
         # Check if user has access to the model
         if user.role == "user":
@@ -1341,7 +1365,8 @@ async def generate_openai_chat_completion(
     url, url_idx = await get_ollama_url(request, payload["model"], url_idx)
     api_config = request.app.state.config.OLLAMA_API_CONFIGS.get(
         str(url_idx),
-        request.app.state.config.OLLAMA_API_CONFIGS.get(url, {}),  # Legacy support
+        request.app.state.config.OLLAMA_API_CONFIGS.get(
+            url, {}),  # Legacy support
     )
 
     prefix_id = api_config.get("prefix_id", None)
@@ -1352,7 +1377,8 @@ async def generate_openai_chat_completion(
         url=f"{url}/v1/chat/completions",
         payload=json.dumps(payload),
         stream=payload.get("stream", False),
-        key=get_api_key(url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
+        key=get_api_key(
+            url_idx, url, request.app.state.config.OLLAMA_API_CONFIGS),
         user=user,
     )
 
@@ -1397,7 +1423,7 @@ async def get_openai_models(
             ]
         except Exception as e:
             log.exception(e)
-            error_detail = "Auna Ideas: Server Connection Error"
+            error_detail = "Auna: Server Connection Error"
             if r is not None:
                 try:
                     res = r.json()
@@ -1469,7 +1495,8 @@ async def download_file_stream(
 
     async with aiohttp.ClientSession(timeout=timeout, trust_env=True) as session:
         async with session.get(file_url, headers=headers) as response:
-            total_size = int(response.headers.get("content-length", 0)) + current_size
+            total_size = int(response.headers.get(
+                "content-length", 0)) + current_size
 
             with open(file_path, "ab+") as file:
                 async for data in response.content.iter_chunked(chunk_size):
@@ -1625,7 +1652,8 @@ async def upload_model(
                     )
 
             else:
-                raise Exception("Ollama: Could not create blob, Please try again.")
+                raise Exception(
+                    "Ollama: Could not create blob, Please try again.")
 
         except Exception as e:
             res = {"error": str(e)}

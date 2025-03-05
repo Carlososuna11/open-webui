@@ -1,3 +1,4 @@
+from pydub.utils import mediainfo
 import hashlib
 import json
 import logging
@@ -63,9 +64,6 @@ SPEECH_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 # Utility functions
 #
 ##########################################
-
-from pydub import AudioSegment
-from pydub.utils import mediainfo
 
 
 def is_mp4_audio(file_path):
@@ -313,7 +311,7 @@ async def speech(request: Request, user=Depends(get_verified_user)):
 
             raise HTTPException(
                 status_code=getattr(r, "status", 500),
-                detail=detail if detail else "Auna Ideas: Server Connection Error",
+                detail=detail if detail else "Auna: Server Connection Error",
             )
 
     elif request.app.state.config.TTS_ENGINE == "elevenlabs":
@@ -367,7 +365,7 @@ async def speech(request: Request, user=Depends(get_verified_user)):
 
             raise HTTPException(
                 status_code=getattr(r, "status", 500),
-                detail=detail if detail else "Auna Ideas: Server Connection Error",
+                detail=detail if detail else "Auna: Server Connection Error",
             )
 
     elif request.app.state.config.TTS_ENGINE == "azure":
@@ -423,7 +421,7 @@ async def speech(request: Request, user=Depends(get_verified_user)):
 
             raise HTTPException(
                 status_code=getattr(r, "status", 500),
-                detail=detail if detail else "Auna Ideas: Server Connection Error",
+                detail=detail if detail else "Auna: Server Connection Error",
             )
 
     elif request.app.state.config.TTS_ENGINE == "transformers":
@@ -458,7 +456,8 @@ async def speech(request: Request, user=Depends(get_verified_user)):
             forward_params={"speaker_embeddings": speaker_embedding},
         )
 
-        sf.write(file_path, speech["audio"], samplerate=speech["sampling_rate"])
+        sf.write(file_path, speech["audio"],
+                 samplerate=speech["sampling_rate"])
 
         async with aiofiles.open(file_body_path, "w") as f:
             await f.write(json.dumps(payload))
@@ -533,7 +532,8 @@ def transcribe(request: Request, file_path):
                 except Exception:
                     detail = f"External: {e}"
 
-            raise Exception(detail if detail else "Auna Ideas: Server Connection Error")
+            raise Exception(
+                detail if detail else "Auna: Server Connection Error")
 
     elif request.app.state.config.STT_ENGINE == "deepgram":
         try:
@@ -596,7 +596,8 @@ def transcribe(request: Request, file_path):
                         detail = f"External: {res['error'].get('message', '')}"
                 except Exception:
                     detail = f"External: {e}"
-            raise Exception(detail if detail else "Auna Ideas: Server Connection Error")
+            raise Exception(
+                detail if detail else "Auna: Server Connection Error")
 
 
 def compress_audio(file_path):
@@ -611,7 +612,8 @@ def compress_audio(file_path):
         if (
             os.path.getsize(compressed_path) > MAX_FILE_SIZE
         ):  # Still larger than MAX_FILE_SIZE after compression
-            raise Exception(ERROR_MESSAGES.FILE_TOO_LARGE(size=f"{MAX_FILE_SIZE_MB}MB"))
+            raise Exception(ERROR_MESSAGES.FILE_TOO_LARGE(
+                size=f"{MAX_FILE_SIZE_MB}MB"))
         return compressed_path
     else:
         return file_path
@@ -691,7 +693,8 @@ def get_available_models(request: Request) -> list[dict]:
                 data = response.json()
                 available_models = data.get("models", [])
             except Exception as e:
-                log.error(f"Error fetching models from custom endpoint: {str(e)}")
+                log.error(
+                    f"Error fetching models from custom endpoint: {str(e)}")
                 available_models = [{"id": "tts-1"}, {"id": "tts-1-hd"}]
         else:
             available_models = [{"id": "tts-1"}, {"id": "tts-1-hd"}]
@@ -736,9 +739,11 @@ def get_available_voices(request) -> dict:
                 response.raise_for_status()
                 data = response.json()
                 voices_list = data.get("voices", [])
-                available_voices = {voice["id"]: voice["name"] for voice in voices_list}
+                available_voices = {voice["id"]: voice["name"]
+                                    for voice in voices_list}
             except Exception as e:
-                log.error(f"Error fetching voices from custom endpoint: {str(e)}")
+                log.error(
+                    f"Error fetching voices from custom endpoint: {str(e)}")
                 available_voices = {
                     "alloy": "alloy",
                     "echo": "echo",

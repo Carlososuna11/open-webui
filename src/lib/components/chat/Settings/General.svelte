@@ -215,7 +215,7 @@
 						href="https://github.com/open-webui/open-webui/blob/main/docs/CONTRIBUTING.md#-translations-and-internationalization"
 						target="_blank"
 					>
-						Help us translate Auna Ideas!
+						Help us translate Auna!
 					</a>
 				</div>
 			{/if}

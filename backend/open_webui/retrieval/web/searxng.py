@@ -67,7 +67,7 @@ def search_searxng(
     response = requests.get(
         query_url,
         headers={
-            "User-Agent": "Auna Ideas (https://github.com/open-webui/open-webui) RAG Bot",
+            "User-Agent": "Auna (https://github.com/open-webui/open-webui) RAG Bot",
             "Accept": "text/html",
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language": "en-US,en;q=0.5",
@@ -80,7 +80,8 @@ def search_searxng(
 
     json_response = response.json()
     results = json_response.get("results", [])
-    sorted_results = sorted(results, key=lambda x: x.get("score", 0), reverse=True)
+    sorted_results = sorted(
+        results, key=lambda x: x.get("score", 0), reverse=True)
     if filter_list:
         sorted_results = get_filtered_results(sorted_results, filter_list)
     return [

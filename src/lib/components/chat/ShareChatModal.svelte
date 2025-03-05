@@ -30,7 +30,7 @@
 		const _chat = chat.chat;
 		console.log('share', _chat);
 
-		toast.success($i18n.t('Redirecting you to Auna Ideas Community'));
+		toast.success($i18n.t('Redirecting you to Auna Community'));
 		const url = 'https://openwebui.com';
 		// const url = 'http://localhost:5173';
 
@@ -143,7 +143,7 @@
 										show = false;
 									}}
 								>
-									{$i18n.t('Share to Auna Ideas Community')}
+									{$i18n.t('Share to Auna Community')}
 								</button>
 							{/if}
 

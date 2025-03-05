@@ -53,7 +53,8 @@ log.setLevel(SRC_LOG_LEVELS["OPENAI"])
 
 
 async def send_get_request(url, key=None, user: UserModel = None):
-    timeout = aiohttp.ClientTimeout(total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
+    timeout = aiohttp.ClientTimeout(
+        total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
     try:
         async with aiohttp.ClientSession(timeout=timeout, trust_env=True) as session:
             async with session.get(
@@ -166,7 +167,8 @@ async def update_config(
     request.app.state.config.OPENAI_API_CONFIGS = form_data.OPENAI_API_CONFIGS
 
     # Remove the API configs that are not in the API URLS
-    keys = list(map(str, range(len(request.app.state.config.OPENAI_API_BASE_URLS))))
+    keys = list(
+        map(str, range(len(request.app.state.config.OPENAI_API_BASE_URLS))))
     request.app.state.config.OPENAI_API_CONFIGS = {
         key: value
         for key, value in request.app.state.config.OPENAI_API_CONFIGS.items()
@@ -214,7 +216,7 @@ async def speech(request: Request, user=Depends(get_verified_user)):
                     **(
                         {
                             "HTTP-Referer": "https://openwebui.com/",
-                            "X-Title": "Auna Ideas",
+                            "X-Title": "Auna",
                         }
                         if "openrouter.ai" in url
                         else {}
@@ -260,11 +262,12 @@ async def speech(request: Request, user=Depends(get_verified_user)):
 
             raise HTTPException(
                 status_code=r.status_code if r else 500,
-                detail=detail if detail else "Auna Ideas: Server Connection Error",
+                detail=detail if detail else "Auna: Server Connection Error",
             )
 
     except ValueError:
-        raise HTTPException(status_code=401, detail=ERROR_MESSAGES.OPENAI_NOT_FOUND)
+        raise HTTPException(
+            status_code=401, detail=ERROR_MESSAGES.OPENAI_NOT_FOUND)
 
 
 async def get_all_models_responses(request: Request, user: UserModel) -> list:
@@ -282,7 +285,8 @@ async def get_all_models_responses(request: Request, user: UserModel) -> list:
             request.app.state.config.OPENAI_API_KEYS = new_keys
         # if there are more urls than keys, add empty keys
         else:
-            request.app.state.config.OPENAI_API_KEYS += [""] * (num_urls - num_keys)
+            request.app.state.config.OPENAI_API_KEYS += [
+                ""] * (num_urls - num_keys)
 
     request_tasks = []
     for idx, url in enumerate(request.app.state.config.OPENAI_API_BASE_URLS):
@@ -335,7 +339,8 @@ async def get_all_models_responses(request: Request, user: UserModel) -> list:
                         asyncio.ensure_future(asyncio.sleep(0, model_list))
                     )
             else:
-                request_tasks.append(asyncio.ensure_future(asyncio.sleep(0, None)))
+                request_tasks.append(
+                    asyncio.ensure_future(asyncio.sleep(0, None)))
 
     responses = await asyncio.gather(*request_tasks)
 
@@ -353,7 +358,8 @@ async def get_all_models_responses(request: Request, user: UserModel) -> list:
 
             if prefix_id:
                 for model in (
-                    response if isinstance(response, list) else response.get("data", [])
+                    response if isinstance(
+                        response, list) else response.get("data", [])
                 ):
                     model["id"] = f"{prefix_id}.{model['id']}"
 
@@ -427,7 +433,8 @@ async def get_all_models(request: Request, user: UserModel) -> dict[str, list]:
     models = {"data": merge_models_lists(map(extract_data, responses))}
     log.debug(f"models: {models}")
 
-    request.app.state.OPENAI_MODELS = {model["id"]: model for model in models["data"]}
+    request.app.state.OPENAI_MODELS = {
+        model["id"]: model for model in models["data"]}
     return models
 
 
@@ -504,7 +511,7 @@ async def get_models(
                 # ClientError covers all aiohttp requests issues
                 log.exception(f"Client error: {str(e)}")
                 raise HTTPException(
-                    status_code=500, detail="Auna Ideas: Server Connection Error"
+                    status_code=500, detail="Auna: Server Connection Error"
                 )
             except Exception as e:
                 log.exception(f"Unexpected error: {e}")
@@ -530,7 +537,8 @@ async def verify_connection(
     key = form_data.key
 
     async with aiohttp.ClientSession(
-        timeout=aiohttp.ClientTimeout(total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
+        timeout=aiohttp.ClientTimeout(
+            total=AIOHTTP_CLIENT_TIMEOUT_OPENAI_MODEL_LIST)
     ) as session:
         try:
             async with session.get(
@@ -565,7 +573,7 @@ async def verify_connection(
             # ClientError covers all aiohttp requests issues
             log.exception(f"Client error: {str(e)}")
             raise HTTPException(
-                status_code=500, detail="Auna Ideas: Server Connection Error"
+                status_code=500, detail="Auna: Server Connection Error"
             )
         except Exception as e:
             log.exception(f"Unexpected error: {e}")
@@ -599,7 +607,8 @@ async def generate_chat_completion(
 
         params = model_info.params.model_dump()
         payload = apply_model_params_to_body_openai(params, payload)
-        payload = apply_model_system_prompt_to_body(params, payload, metadata, user)
+        payload = apply_model_system_prompt_to_body(
+            params, payload, metadata, user)
 
         # Check if user has access to the model
         if not bypass_filter and user.role == "user":
@@ -690,7 +699,7 @@ async def generate_chat_completion(
                 **(
                     {
                         "HTTP-Referer": "https://openwebui.com/",
-                        "X-Title": "Auna Ideas",
+                        "X-Title": "Auna",
                     }
                     if "openrouter.ai" in url
                     else {}
@@ -740,7 +749,7 @@ async def generate_chat_completion(
 
         raise HTTPException(
             status_code=r.status if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
     finally:
         if not streaming and session:
@@ -817,7 +826,7 @@ async def proxy(path: str, request: Request, user=Depends(get_verified_user)):
                 detail = f"External: {e}"
         raise HTTPException(
             status_code=r.status if r else 500,
-            detail=detail if detail else "Auna Ideas: Server Connection Error",
+            detail=detail if detail else "Auna: Server Connection Error",
         )
     finally:
         if not streaming and session:

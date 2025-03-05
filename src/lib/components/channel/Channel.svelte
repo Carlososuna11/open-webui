@@ -195,7 +195,7 @@
 </script>
 
 <svelte:head>
-	<title>#{channel?.name ?? 'Channel'} | Auna Ideas</title>
+	<title>#{channel?.name ?? 'Channel'} | Auna</title>
 </svelte:head>
 
 <div

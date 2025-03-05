@@ -65,7 +65,7 @@
 			return null;
 		});
 
-		toast.success($i18n.t('Redirecting you to Auna Ideas Community'));
+		toast.success($i18n.t('Redirecting you to Auna Community'));
 
 		const url = 'https://openwebui.com';
 
@@ -438,7 +438,7 @@
 	{#if $config?.features.enable_community_sharing}
 		<div class=" my-16">
 			<div class=" text-xl font-medium mb-1 line-clamp-1">
-				{$i18n.t('Made by Auna Ideas Community')}
+				{$i18n.t('Made by Auna Community')}
 			</div>
 
 			<a
