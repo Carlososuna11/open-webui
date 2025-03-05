@@ -1312,7 +1312,7 @@
 															<img
 																src={action.icon_url}
 																class="w-4 h-4 {action.icon_url.includes('svg')
-																	? 'dark:invert-[80%]'
+																	? ''
 																	: ''}"
 																style="fill: currentColor;"
 																alt={action.name}

@@ -26,7 +26,7 @@
 			>
 				<img
 					src="/static/splash.png"
-					class="size-11 dark:invert p-0.5"
+					class="size-11 p-0.5"
 					alt="logo"
 					draggable="false"
 				/>
